@@ -18,24 +18,57 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private Integer count = 1;
+  private boolean maybeWindows = false;
 
-  public FileNumberingFilterWriter(Writer out) {
+  public FileNumberingFilterWriter(Writer out){
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int c : str.substring(off, off + len).toCharArray())
+      write(c);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i = off; i < (off + len); ++i)
+      write(cbuf[i]);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if(count == 1)
+      writeNumberLine();
+
+    if(maybeWindows) {
+      if(c != '\n')
+        writeNumberLine();
+
+      maybeWindows = false;
+    }
+
+    super.write(c);
+
+    if(c == '\r')
+      maybeWindows = true;
+
+    if(c == '\n')
+      writeNumberLine();
+  }
+
+  @Override
+  public void close() throws IOException {
+    if(maybeWindows)
+      writeNumberLine();
+
+    super.close();
+  }
+
+  private void writeNumberLine() throws IOException {
+    for(int c : String.format("%d\t", count++).toCharArray())
+      super.write(c);
   }
 
 }

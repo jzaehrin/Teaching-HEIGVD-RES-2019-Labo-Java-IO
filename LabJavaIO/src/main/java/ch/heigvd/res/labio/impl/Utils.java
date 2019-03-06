@@ -28,13 +28,14 @@ public class Utils {
       } else if (lines.contains("\r")) { // pre-OS X
         endLine = '\r';
       } else {
+        result[0] = "";
         result[1] = lines;
         return result;
       }
 
       int index = lines.indexOf(endLine);
-      result[0] = lines.substring(0, index);
-      result[1] = lines.substring(index + 1, lines.length());
+      result[0] = lines.substring(0, index + 1);
+      result[1] = lines.substring(index + 1);
 
       return result;
   }

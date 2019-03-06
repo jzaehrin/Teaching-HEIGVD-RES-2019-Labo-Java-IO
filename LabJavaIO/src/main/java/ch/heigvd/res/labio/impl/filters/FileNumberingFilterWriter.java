@@ -40,11 +40,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(int c) throws IOException {
     if(count == 1)
-      writeNumberLine();
+      insertNumberLine();
 
     if(maybeWindows) {
       if(c != '\n')
-        writeNumberLine();
+        insertNumberLine();
 
       maybeWindows = false;
     }
@@ -55,18 +55,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
       maybeWindows = true;
 
     if(c == '\n')
-      writeNumberLine();
+      insertNumberLine();
   }
 
   @Override
   public void close() throws IOException {
     if(maybeWindows)
-      writeNumberLine();
+      insertNumberLine();
 
     super.close();
   }
 
-  private void writeNumberLine() throws IOException {
+  private void insertNumberLine() throws IOException {
     for(int c : String.format("%d\t", count++).toCharArray())
       super.write(c);
   }

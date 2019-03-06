@@ -135,8 +135,11 @@ public class Application implements IApplication {
     File file = new File(path);
     file.getParentFile().mkdirs();
 
-    FileWriter fw = new FileWriter(file);
+    Writer fw = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
     fw.write(quote.getQuote());
+
+    fw.flush();
+    fw.close();
   }
   
   /**
@@ -154,7 +157,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
         try {
-          writer.write(file.getPath() + file.getName());
+          writer.write(file.getPath() + "\n");
         } catch (IOException e) {
           LOG.severe("Received an IO error in printFileNames");
         }

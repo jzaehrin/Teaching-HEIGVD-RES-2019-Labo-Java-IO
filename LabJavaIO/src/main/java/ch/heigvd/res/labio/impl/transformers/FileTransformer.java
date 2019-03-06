@@ -29,7 +29,9 @@ public abstract class FileTransformer implements IFileVisitor {
 
   private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
   private final List<FilterWriter> filters = new ArrayList<>();
-  
+  private static final int BUFFER_SIZE = 80;
+  private char[] buffer = new char[BUFFER_SIZE];
+
   /**
    * The subclasses implement this method to define what transformation(s) are
    * applied when writing characters to the output writer. The visit(File file)
@@ -58,13 +60,11 @@ public abstract class FileTransformer implements IFileVisitor {
        * writer has been decorated by the concrete subclass!). You need to write a loop to read the
        * characters and write them to the writer.
        */
-      char[] buf = new char[80];
-
       int size = 0;
-      while((size = reader.read(buf)) == 80)
-        writer.write(buf, 0, size);
+      while((size = reader.read(buffer)) == BUFFER_SIZE)
+        writer.write(buffer, 0, size);
 
-      writer.write(buf, 0, size);
+      writer.write(buffer, 0, size);
       
       reader.close();
       writer.flush();

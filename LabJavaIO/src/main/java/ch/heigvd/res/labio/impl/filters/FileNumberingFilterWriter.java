@@ -3,6 +3,7 @@ package ch.heigvd.res.labio.impl.filters;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.security.InvalidParameterException;
 import java.util.logging.Logger;
 
 /**
@@ -27,12 +28,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
+    if(off > str.length() || (off + len) > str.length())
+      throw new InvalidParameterException("off or/and (off + len) are too long");
+
     for(int c : str.substring(off, off + len).toCharArray())
       write(c);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
+    if(off > cbuf.length || (off + len) > cbuf.length)
+      throw new InvalidParameterException("off or/and (off + len) are too long");
+
     for(int i = off; i < (off + len); ++i)
       write(cbuf[i]);
   }

@@ -22,18 +22,18 @@ public class Utils {
   public static String[] getNextLine(String lines) {
       String[] result = new String[2];
 
-      char endLine;
+      int index;
+
       if (lines.contains("\n")) { //Unix and Windows
-        endLine = '\n';
+        index = lines.indexOf('\n');
       } else if (lines.contains("\r")) { // pre-OS X
-        endLine = '\r';
+          index = lines.indexOf('\r');
       } else {
         result[0] = "";
         result[1] = lines;
         return result;
       }
 
-      int index = lines.indexOf(endLine);
       result[0] = lines.substring(0, index + 1);
       result[1] = lines.substring(index + 1);
 

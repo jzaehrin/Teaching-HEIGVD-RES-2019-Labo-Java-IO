@@ -20,7 +20,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private Integer count = 1;
-  private boolean maybeWindows = false;
+  private boolean newLine = true;
 
   public FileNumberingFilterWriter(Writer out){
     super(out);
@@ -46,20 +46,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    if(count == 1)
-      insertNumberLine();
-
-    if(maybeWindows) {
+    if(newLine) {
       if(c != '\n')
         insertNumberLine();
 
-      maybeWindows = false;
+      newLine = false;
     }
 
     super.write(c);
 
     if(c == '\r')
-      maybeWindows = true;
+      newLine = true;
 
     if(c == '\n')
       insertNumberLine();
@@ -67,7 +64,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void close() throws IOException {
-    if(maybeWindows)
+    if(newLine)
       insertNumberLine();
 
     super.close();
